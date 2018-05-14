@@ -26,12 +26,10 @@ class SequenceFolder(data.Dataset):
         transform functions must take in a list a images and a numpy array (usually intrinsics matrix)
     """
 
-    def __init__(self, seed=None, train=True, sequence_length=3, transform=None, target_transform=None):
+    def __init__(self, filenames, seed=None, transform=None):
         np.random.seed(seed)
         random.seed(seed)
-        self.left_scene_root = 'data/frames_cleanpass_webp/35mm_focallength/scene_forwards/fast/left/'
-        self.disp_root = 'data/disparity/35mm_focallength/scene_forwards/fast/left/'
-        self.img_names = os.listdir(self.left_scene_root)[:5]
+        self.img_names = filenames
         self.transform = transform
         
     @staticmethod    
@@ -39,11 +37,17 @@ class SequenceFolder(data.Dataset):
         dir_path, filename = os.path.split(path)
         dir_path, _ = os.path.split(dir_path)
         return os.path.join(dir_path, new_dir, filename)
+    
+    @staticmethod
+    def get_disp_path(path):
+        tmp_arr = path.split('/', 2)
+        tmp_arr[1] = "disparity"
+        return "/".join(tmp_arr)
 
     def __getitem__(self, index):
-        left_img = np.asarray(Image.open(self.left_scene_root + self.img_names[index]).convert("RGB"))
-        right_img = np.asarray(Image.open(self.get_new_path(self.left_scene_root) + self.img_names[index]).convert("RGB"))
-        disp_map, _ = readPFM(self.disp_root + os.path.splitext(self.img_names[index])[0] + '.pfm')
+        left_img = np.asarray(Image.open(self.img_names[index]).convert("RGB"))
+        right_img = np.asarray(Image.open(self.get_new_path(self.img_names[index])).convert("RGB"))
+        disp_map, _ = readPFM(os.path.splitext(self.get_disp_path(self.img_names[index]))[0] + '.pfm')
         if self.transform is not None:
             left_img, right_img, disp_map = self.transform(left_img/255, right_img/255, disp_map)
         else:
