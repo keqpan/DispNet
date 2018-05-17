@@ -32,6 +32,12 @@ class SequenceFolder(data.Dataset):
         self.img_names = filenames
         self.transform = transform
         
+        self.disp6_size = (30, 17)
+        self.disp5_size = (60, 34)
+        self.disp4_size = (120, 68)
+        self.disp3_size = (240, 135)
+        self.disp2_size = (480, 270)
+        
     @staticmethod    
     def get_new_path(path, new_dir="right"):
         dir_path, filename = os.path.split(path)
@@ -48,11 +54,20 @@ class SequenceFolder(data.Dataset):
         left_img = np.asarray(Image.open(self.img_names[index]).convert("RGB"))
         right_img = np.asarray(Image.open(self.get_new_path(self.img_names[index])).convert("RGB"))
         disp_map, _ = readPFM(os.path.splitext(self.get_disp_path(self.img_names[index]))[0] + '.pfm')
+        disp_img_tmp = Image.fromarray(disp_map)
+        
         if self.transform is not None:
             left_img, right_img, disp_map = self.transform(left_img/255, right_img/255, disp_map)
         else:
             pass #TODO
-        return left_img, right_img, disp_map
+
+        disp6 = np.asarray(disp_img_tmp.resize(self.disp6_size))
+        disp5 = np.asarray(disp_img_tmp.resize(self.disp5_size))
+        disp4 = np.asarray(disp_img_tmp.resize(self.disp4_size))
+        disp3 = np.asarray(disp_img_tmp.resize(self.disp3_size)) 
+        disp2 = np.asarray(disp_img_tmp.resize(self.disp2_size))
+
+        return left_img, right_img, (disp_map, disp2, disp3, disp4, disp5, disp6)
 
     def __len__(self):
         return len(self.img_names)

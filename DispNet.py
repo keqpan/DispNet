@@ -2,12 +2,10 @@ import torch
 import torch.nn as nn
 
 
-def downsample_conv(in_planes, out_planes, kernel_size=3):
+def downsample_conv(in_planes, out_planes, kernel_size=3, stride=2):
     return nn.Sequential(
-        nn.Conv2d(in_planes, out_planes, kernel_size=kernel_size, stride=2, padding=(kernel_size-1)//2),
+        nn.Conv2d(in_planes, out_planes, kernel_size=kernel_size, stride=stride, padding=(kernel_size-1)//2),
         nn.ReLU(inplace=True),
-        nn.Conv2d(out_planes, out_planes, kernel_size=kernel_size, padding=(kernel_size-1)//2),
-        nn.ReLU(inplace=True)
     )
 
 
@@ -25,9 +23,9 @@ def conv(in_planes, out_planes):
     )
 
 
-def upconv(in_planes, out_planes):
+def upconv(in_planes, out_planes, kernel_size=4):
     return nn.Sequential(
-        nn.ConvTranspose2d(in_planes, out_planes, kernel_size=3, stride=2, padding=1, output_padding=1),
+        nn.ConvTranspose2d(in_planes, out_planes, kernel_size=kernel_size, stride=2, padding=1),
         nn.ReLU(inplace=True)
     )
 
@@ -45,36 +43,44 @@ class DispNet(nn.Module):
         self.alpha = alpha
         self.beta = beta
 
-        conv_planes = [32, 64, 128, 256, 512, 512, 512]
-        self.conv1 = downsample_conv(3,              conv_planes[0], kernel_size=7)
+        conv_planes = [64, 128, 256, 512, 512, 1024]
+        self.conv1 = downsample_conv(6,              conv_planes[0], kernel_size=7)
         self.conv2 = downsample_conv(conv_planes[0], conv_planes[1], kernel_size=5)
-        self.conv3 = downsample_conv(conv_planes[1], conv_planes[2])
-        self.conv4 = downsample_conv(conv_planes[2], conv_planes[3])
-        self.conv5 = downsample_conv(conv_planes[3], conv_planes[4])
-        self.conv6 = downsample_conv(conv_planes[4], conv_planes[5])
-        self.conv7 = downsample_conv(conv_planes[5], conv_planes[6])
+        self.conv3a = downsample_conv(conv_planes[1], conv_planes[2], kernel_size=5)
+        self.conv3b = downsample_conv(conv_planes[2], conv_planes[2], stride=1)
+        self.conv4a = downsample_conv(conv_planes[2], conv_planes[3])
+        self.conv4b = downsample_conv(conv_planes[3], conv_planes[3], stride=1)
+        self.conv5a = downsample_conv(conv_planes[3], conv_planes[4])
+        self.conv5b = downsample_conv(conv_planes[4], conv_planes[4], stride=1)
+        self.conv6a = downsample_conv(conv_planes[4], conv_planes[5])
+        self.conv6b = downsample_conv(conv_planes[5], conv_planes[5], stride=1)
 
-        upconv_planes = [512, 512, 256, 128, 64, 32, 16]
-        self.upconv7 = upconv(conv_planes[6],   upconv_planes[0])
-        self.upconv6 = upconv(upconv_planes[0], upconv_planes[1])
-        self.upconv5 = upconv(upconv_planes[1], upconv_planes[2])
-        self.upconv4 = upconv(upconv_planes[2], upconv_planes[3])
-        self.upconv3 = upconv(upconv_planes[3], upconv_planes[4])
-        self.upconv2 = upconv(upconv_planes[4], upconv_planes[5])
-        self.upconv1 = upconv(upconv_planes[5], upconv_planes[6])
+        upconv_planes = [512, 256, 128, 64, 32]
+        self.upconv5 = upconv(conv_planes[5],   upconv_planes[0])
+        self.upconv4 = upconv(upconv_planes[0], upconv_planes[1])
+        self.upconv3 = upconv(upconv_planes[1], upconv_planes[2])
+        self.upconv2 = upconv(upconv_planes[2], upconv_planes[3])
+        self.upconv1 = upconv(upconv_planes[3], upconv_planes[4])
 
-        self.iconv7 = conv(upconv_planes[0] + conv_planes[5], upconv_planes[0])
-        self.iconv6 = conv(upconv_planes[1] + conv_planes[4], upconv_planes[1])
-        self.iconv5 = conv(upconv_planes[2] + conv_planes[3], upconv_planes[2])
-        self.iconv4 = conv(upconv_planes[3] + conv_planes[2], upconv_planes[3])
-        self.iconv3 = conv(1 + upconv_planes[4] + conv_planes[1], upconv_planes[4])
-        self.iconv2 = conv(1 + upconv_planes[5] + conv_planes[0], upconv_planes[5])
-        self.iconv1 = conv(1 + upconv_planes[6], upconv_planes[6])
 
-        self.predict_disp4 = predict_disp(upconv_planes[3])
-        self.predict_disp3 = predict_disp(upconv_planes[4])
-        self.predict_disp2 = predict_disp(upconv_planes[5])
-        self.predict_disp1 = predict_disp(upconv_planes[6])
+        self.iconv5 = conv(1 + upconv_planes[0] + conv_planes[4], upconv_planes[0])
+        self.iconv4 = conv(1 + upconv_planes[1] + conv_planes[3], upconv_planes[1])
+        self.iconv3 = conv(1 + upconv_planes[2] + conv_planes[2], upconv_planes[2])
+        self.iconv2 = conv(1 + upconv_planes[3] + conv_planes[1], upconv_planes[3])
+        self.iconv1 = conv(1 + upconv_planes[4] + conv_planes[0], upconv_planes[4])
+
+        self.pr6 = predict_disp(conv_planes[5])
+        self.upsample6 = nn.ConvTranspose2d(1, 1, 4, 2, 1, bias=False)
+        self.pr5 = predict_disp(upconv_planes[0])
+        self.upsample5 = nn.ConvTranspose2d(1, 1, 4, 2, 1, bias=False)
+        self.pr4 = predict_disp(upconv_planes[1])
+        self.upsample4 = nn.ConvTranspose2d(1, 1, 4, 2, 1, bias=False)
+        self.pr3 = predict_disp(upconv_planes[2])
+        self.upsample3 = nn.ConvTranspose2d(1, 1, 4, 2, 1, bias=False)
+        self.pr2 = predict_disp(upconv_planes[3])
+        self.upsample2 = nn.ConvTranspose2d(1, 1, 4, 2, 1, bias=False)
+        self.pr1 = predict_disp(upconv_planes[4])
+        self.upsample1 = nn.ConvTranspose2d(1, 1, 4, 2, 1, bias=False)
 
     def init_weights(self):
         for m in self.modules():
@@ -85,49 +91,64 @@ class DispNet(nn.Module):
 
     def forward(self, x):
         out_conv1 = self.conv1(x)
+#         print("out_conv1", out_conv1.size())
         out_conv2 = self.conv2(out_conv1)
-        out_conv3 = self.conv3(out_conv2)
-        out_conv4 = self.conv4(out_conv3)
-        out_conv5 = self.conv5(out_conv4)
-        out_conv6 = self.conv6(out_conv5)
-        out_conv7 = self.conv7(out_conv6)
+#         print("out_conv2", out_conv2.size())
+        out_conv3a = self.conv3a(out_conv2)
+        out_conv3b = self.conv3b(out_conv3a)
+#         print("out_conv3b", out_conv3b.size())
+        out_conv4a = self.conv4a(out_conv3b)
+        out_conv4b = self.conv4b(out_conv4a)
+#         print("out_conv4b", out_conv4b.size())
+        out_conv5a = self.conv5a(out_conv4b)
+        out_conv5b = self.conv5b(out_conv5a)
+#         print("out_conv5b", out_conv5b.size())
+        out_conv6a = self.conv6a(out_conv5b)
+        out_conv6b = self.conv6b(out_conv6a)
+#         print("out_conv6b", out_conv6b.size())
+        
+        disp6 = self.pr6(out_conv6b)
+        disp6 = crop_like(self.upsample6(disp6), out_conv5b)
+#         print("disp6", disp6.size())
 
-        out_upconv7 = crop_like(self.upconv7(out_conv7), out_conv6)
-        concat7 = torch.cat((out_upconv7, out_conv6), 1)
-        out_iconv7 = self.iconv7(concat7)
-
-        out_upconv6 = crop_like(self.upconv6(out_iconv7), out_conv5)
-        concat6 = torch.cat((out_upconv6, out_conv5), 1)
-        out_iconv6 = self.iconv6(concat6)
-
-        out_upconv5 = crop_like(self.upconv5(out_iconv6), out_conv4)
-        concat5 = torch.cat((out_upconv5, out_conv4), 1)
+        out_upconv5 = self.upconv5(out_conv6b)
+#         print("out_upconv5", out_upconv5.size())        
+        concat5 = torch.cat((crop_like(out_upconv5, out_conv5b), disp6, out_conv5b), 1)
         out_iconv5 = self.iconv5(concat5)
-
-        out_upconv4 = crop_like(self.upconv4(out_iconv5), out_conv3)
-        concat4 = torch.cat((out_upconv4, out_conv3), 1)
+        disp5 = self.pr5(out_iconv5)
+        disp5 = crop_like(self.upsample5(disp5), out_conv4b)
+#         print("disp5", disp5.size())
+        
+        out_upconv4 = self.upconv4(out_iconv5)
+#         print("out_upconv4", out_upconv4.size())    
+        concat4 = torch.cat((crop_like(out_upconv4, out_conv4b), disp5, out_conv4b), 1)
         out_iconv4 = self.iconv4(concat4)
-        disp4 = self.alpha * self.predict_disp4(out_iconv4) + self.beta
+        disp4 = self.pr4(out_iconv4)
+        disp4 = crop_like(self.upsample4(disp4), out_conv3b)
+#         print("disp4", disp4.size())
 
-        out_upconv3 = crop_like(self.upconv3(out_iconv4), out_conv2)
-        disp4_up = crop_like(nn.functional.upsample(disp4, scale_factor=2, mode='bilinear'), out_conv2)
-        concat3 = torch.cat((out_upconv3, out_conv2, disp4_up), 1)
+        out_upconv3 = self.upconv3(out_iconv4)
+        concat3 = torch.cat((crop_like(out_upconv3, out_conv3b), disp4, out_conv3b), 1)
         out_iconv3 = self.iconv3(concat3)
-        disp3 = self.alpha * self.predict_disp3(out_iconv3) + self.beta
-
-        out_upconv2 = crop_like(self.upconv2(out_iconv3), out_conv1)
-        disp3_up = crop_like(nn.functional.upsample(disp3, scale_factor=2, mode='bilinear'), out_conv1)
-        concat2 = torch.cat((out_upconv2, out_conv1, disp3_up), 1)
+        disp3 = self.pr3(out_iconv3)
+        disp3 = crop_like(self.upsample3(disp3), out_conv2)
+#         print("disp3", disp3.size())
+        
+        out_upconv2 = self.upconv2(out_iconv3)
+        concat2 = torch.cat((crop_like(out_upconv2, out_conv2), disp3, out_conv2), 1)
         out_iconv2 = self.iconv2(concat2)
-        disp2 = self.alpha * self.predict_disp2(out_iconv2) + self.beta
-
-        out_upconv1 = crop_like(self.upconv1(out_iconv2), x)
-        disp2_up = crop_like(nn.functional.upsample(disp2, scale_factor=2, mode='bilinear'), x)
-        concat1 = torch.cat((out_upconv1, disp2_up), 1)
+        disp2 = self.pr2(out_iconv2)
+        disp2 = crop_like(self.upsample2(disp2), out_conv1)
+#         print("disp2", disp2.size())
+        
+        out_upconv1 = self.upconv1(out_iconv2)
+        concat1 = torch.cat((crop_like(out_upconv1, out_conv1), disp2, out_conv1), 1)
         out_iconv1 = self.iconv1(concat1)
-        disp1 = self.alpha * self.predict_disp1(out_iconv1) + self.beta
+        disp1 = self.pr1(out_iconv1)
+        disp1 = crop_like(self.upsample1(disp1), x)
+#         print("disp1", disp1.size())
 
         if self.training:
-            return disp1, disp2, disp3, disp4
+            return disp1, disp2, disp3, disp4, disp5, disp6
         else:
             return disp1
