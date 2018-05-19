@@ -32,6 +32,7 @@ class SequenceFolder(data.Dataset):
         self.img_names = filenames
         self.transform = transform
         
+        self.disp7_size = (15, 9)
         self.disp6_size = (30, 17)
         self.disp5_size = (60, 34)
         self.disp4_size = (120, 68)
@@ -61,13 +62,14 @@ class SequenceFolder(data.Dataset):
         else:
             pass #TODO
 
+        disp7 = np.asarray(disp_img_tmp.resize(self.disp7_size))
         disp6 = np.asarray(disp_img_tmp.resize(self.disp6_size))
         disp5 = np.asarray(disp_img_tmp.resize(self.disp5_size))
         disp4 = np.asarray(disp_img_tmp.resize(self.disp4_size))
         disp3 = np.asarray(disp_img_tmp.resize(self.disp3_size)) 
         disp2 = np.asarray(disp_img_tmp.resize(self.disp2_size))
 
-        return left_img, right_img, (disp_map, disp2, disp3, disp4, disp5, disp6)
+        return left_img, right_img, (disp_map, disp2, disp3, disp4, disp5, disp6, disp7)
 
     def __len__(self):
         return len(self.img_names)
