@@ -55,11 +55,8 @@ class SequenceFolder(data.Dataset):
         left_img = np.asarray(Image.open(self.img_names[index]).convert("RGB"))
         right_img = np.asarray(Image.open(self.get_new_path(self.img_names[index])).convert("RGB"))
         disp_map, _ = readPFM(os.path.splitext(self.get_disp_path(self.img_names[index]))[0] + '.pfm')
-<<<<<<< HEAD
         disp_img_tmp = Image.fromarray(disp_map)
-        
-=======
->>>>>>> 56370ebd6e295dbc9cf13a4b8d1b7ce816ebe3ea
+
         if self.transform is not None:
             left_img, right_img, disp_map = self.transform(left_img/255, right_img/255, disp_map)
         else:
