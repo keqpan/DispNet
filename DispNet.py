@@ -33,6 +33,11 @@ def upconv(in_planes, out_planes, kernel_size=4):
         nn.ReLU(inplace=True)
     )
 
+def predict_disp_segment(in_planes, n_segments = 10):
+    return nn.Sequential(
+        nn.Conv2d(in_planes, n_segments, kernel_size=3, padding=1),
+        nn.ReLU()
+    )
 
 def crop_like(input, ref):
     assert(input.size(2) >= ref.size(2) and input.size(3) >= ref.size(3))
@@ -78,7 +83,23 @@ class DispNet(nn.Module):
         self.pr4 = predict_disp(upconv_planes[1])
         self.pr3 = predict_disp(upconv_planes[2])
         self.pr2 = predict_disp(upconv_planes[3])
-        self.pr1 = predict_disp(upconv_planes[4])
+#         self.pr1 = predict_disp(upconv_planes[4])
+        
+#         self.pr1_0 = predict_disp(upconv_planes[4])
+#         self.pr1_1 = predict_disp(upconv_planes[4])
+#         self.pr1_2 = predict_disp(upconv_planes[4])
+#         self.pr1_3 = predict_disp(upconv_planes[4])
+#         self.pr1_4 = predict_disp(upconv_planes[4])
+#         self.pr1_5 = predict_disp(upconv_planes[4])
+#         self.pr1_6 = predict_disp(upconv_planes[4])
+#         self.pr1_7 = predict_disp(upconv_planes[4])
+#         self.pr1_8 = predict_disp(upconv_planes[4])
+#         self.pr1_9 = predict_disp(upconv_planes[4])
+#         [self.pr1_0, self.pr1_1, self.pr1_2, self.pr1_3, self.pr1_4, self.pr1_5, self.pr1_6, self.pr1_7, self.pr1_8, self.pr1_9]  
+        
+        self.pr1_segment = nn.Conv2d(upconv_planes[4], 10, kernel_size=3, padding=1)
+        
+        self.pr1_delta = predict_disp_segment(upconv_planes[4])
         
 #         self.upsample6 = nn.ConvTranspose2d(1, 1, 4, 2, 1, bias=False)
 #         self.upsample5 = nn.ConvTranspose2d(1, 1, 4, 2, 1, bias=False)
@@ -149,11 +170,16 @@ class DispNet(nn.Module):
         out_upconv1 = self.upconv1(out_iconv2)
         concat1 = torch.cat((crop_like(out_upconv1, out_conv1), disp2, out_conv1), 1)
         out_iconv1 = self.iconv1(concat1)
-        disp1_out = self.pr1(out_iconv1)
-        disp = F.upsample(disp1_out, list(x.size()[-2:]), mode='bilinear', align_corners=True)
+        
+        disp1_probs = self.pr1_segment(out_iconv1)
+        pr1_shifts = self.pr1_delta(out_iconv1)
+#         print("pr1_shifts", pr1_shifts.size())
 #         print("disp1", disp1.size())
 
         if self.training:
-            return disp1_out, disp2_out, disp3_out, disp4_out, disp5_out, disp6_out
+            return disp1_probs, pr1_shifts, disp2_out, disp3_out, disp4_out, disp5_out, disp6_out
         else:
+            disp1_out = disp1_probs.argmax(dim=1, keepdim=True)
+            disp1_out = pr1_shifts.gather(1, disp1_out) + 30*disp1_out.float()
+            disp = F.upsample(disp1_out, list(x.size()[-2:]), mode='bilinear', align_corners=True)            
             return disp
