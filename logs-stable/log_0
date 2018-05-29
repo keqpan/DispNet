@@ -1,0 +1,61 @@
+Epoch 1 of 60 took 206.023s
+  training loss (in-iteration): 	1305.752302
+
+  validation loss: 			14265.018369Epoch 2 of 60 took 206.245s
+  training loss (in-iteration): 	241.401748
+
+  validation loss: 			14258.550869Epoch 3 of 60 took 206.153s
+  training loss (in-iteration): 	195.516096
+
+  validation loss: 			14255.704541Epoch 4 of 60 took 206.546s
+  training loss (in-iteration): 	182.809777
+
+  validation loss: 			14254.610713Epoch 5 of 60 took 206.649s
+  training loss (in-iteration): 	163.799270
+
+  validation loss: 			14256.101143Epoch 6 of 60 took 206.583s
+  training loss (in-iteration): 	146.087167
+
+  validation loss: 			14257.144580Epoch 7 of 60 took 206.217s
+  training loss (in-iteration): 	130.260613
+
+  validation loss: 			14262.096172Epoch 8 of 60 took 206.529s
+  training loss (in-iteration): 	128.316061
+
+  validation loss: 			14258.572568Epoch 9 of 60 took 206.240s
+  training loss (in-iteration): 	114.525618
+
+  validation loss: 			14261.094141Epoch 10 of 60 took 206.554s
+  training loss (in-iteration): 	106.863634
+
+  validation loss: 			14261.248242Epoch 11 of 60 took 206.168s
+  training loss (in-iteration): 	99.661711
+
+  validation loss: 			14259.888428Epoch 12 of 60 took 206.666s
+  training loss (in-iteration): 	93.396579
+
+  validation loss: 			14259.400947Epoch 13 of 60 took 206.583s
+  training loss (in-iteration): 	88.857889
+
+  validation loss: 			14261.119971Epoch 14 of 60 took 206.692s
+  training loss (in-iteration): 	86.130793
+
+  validation loss: 			14258.472510Epoch 15 of 60 took 206.794s
+  training loss (in-iteration): 	77.570668
+
+  validation loss: 			14260.172617Epoch 16 of 60 took 206.501s
+  training loss (in-iteration): 	72.184158
+
+  validation loss: 			14259.081689Epoch 17 of 60 took 206.922s
+  training loss (in-iteration): 	66.301608
+
+  validation loss: 			14259.658955Epoch 18 of 60 took 206.649s
+  training loss (in-iteration): 	65.611121
+
+  validation loss: 			14261.231133Epoch 19 of 60 took 206.376s
+  training loss (in-iteration): 	66.291852
+
+  validation loss: 			14261.696211Epoch 20 of 60 took 206.314s
+  training loss (in-iteration): 	56.225840
+
+  validation loss: 			14261.477021

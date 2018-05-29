@@ -1,0 +1,303 @@
+Epoch 1 of 60 took 472.855s
+  training loss (in-iteration): 	20.705966
+
+Epoch 2 of 60 took 472.016s
+  training loss (in-iteration): 	12.056585
+
+Epoch 3 of 60 took 470.894s
+  training loss (in-iteration): 	10.477892
+
+Epoch 4 of 60 took 471.164s
+  training loss (in-iteration): 	9.759985
+
+Epoch 5 of 60 took 470.222s
+  training loss (in-iteration): 	9.449359
+
+Epoch 6 of 60 took 471.541s
+  training loss (in-iteration): 	8.987369
+
+Epoch 7 of 60 took 471.073s
+  training loss (in-iteration): 	9.127196
+
+Epoch 8 of 60 took 470.975s
+  training loss (in-iteration): 	8.453374
+
+Epoch 1 of 60 took 475.884s
+  training loss (in-iteration): 	19.297651
+
+Epoch 2 of 60 took 472.301s
+  training loss (in-iteration): 	10.415944
+
+Epoch 3 of 60 took 472.145s
+  training loss (in-iteration): 	9.291276
+
+Epoch 4 of 60 took 472.110s
+  training loss (in-iteration): 	8.511055
+
+Epoch 5 of 60 took 472.481s
+  training loss (in-iteration): 	8.176812
+
+Epoch 6 of 60 took 472.144s
+  training loss (in-iteration): 	7.584803
+
+Epoch 7 of 60 took 471.982s
+  training loss (in-iteration): 	7.075817
+
+Epoch 8 of 60 took 471.850s
+  training loss (in-iteration): 	7.279550
+
+Epoch 9 of 60 took 472.033s
+  training loss (in-iteration): 	6.767270
+
+Epoch 10 of 60 took 472.502s
+  training loss (in-iteration): 	6.505306
+
+Epoch 11 of 60 took 472.184s
+  training loss (in-iteration): 	6.389345
+
+Epoch 12 of 60 took 473.181s
+  training loss (in-iteration): 	6.472889
+
+Epoch 13 of 60 took 473.381s
+  training loss (in-iteration): 	6.276675
+
+Epoch 1 of 60 took 471.182s
+  training loss (in-iteration): 	8.130116
+
+Epoch 2 of 60 took 472.753s
+  training loss (in-iteration): 	8.048769
+
+Epoch 1 of 60 took 472.200s
+  training loss (in-iteration): 	21.390949
+
+Epoch 2 of 60 took 471.970s
+  training loss (in-iteration): 	15.315656
+
+Epoch 3 of 60 took 472.343s
+  training loss (in-iteration): 	13.807273
+
+Epoch 4 of 60 took 472.282s
+  training loss (in-iteration): 	13.425515
+
+Epoch 5 of 60 took 472.123s
+  training loss (in-iteration): 	12.366677
+
+Epoch 6 of 60 took 472.081s
+  training loss (in-iteration): 	11.984724
+
+Epoch 1 of 60 took 474.858s
+  training loss (in-iteration): 	86.172179
+
+Epoch 2 of 60 took 474.375s
+  training loss (in-iteration): 	907.072287
+
+Epoch 3 of 60 took 474.659s
+  training loss (in-iteration): 	4326.684072
+
+Epoch 4 of 60 took 474.473s
+  training loss (in-iteration): 	3189.002451
+
+Epoch 5 of 60 took 474.068s
+  training loss (in-iteration): 	3816.878916
+
+Epoch 6 of 60 took 473.201s
+  training loss (in-iteration): 	4803.931125
+
+Epoch 7 of 60 took 472.880s
+  training loss (in-iteration): 	3152.284528
+
+Epoch 8 of 60 took 472.831s
+  training loss (in-iteration): 	3080.295152
+
+Epoch 9 of 60 took 472.997s
+  training loss (in-iteration): 	3239.971424
+
+Epoch 10 of 60 took 472.753s
+  training loss (in-iteration): 	3131.203590
+
+Epoch 11 of 60 took 472.706s
+  training loss (in-iteration): 	3758.635149
+
+Epoch 12 of 60 took 472.608s
+  training loss (in-iteration): 	3443.081679
+
+Epoch 1 of 60 took 473.178s
+  training loss (in-iteration): 	79813.352891
+
+Epoch 2 of 60 took 473.217s
+  training loss (in-iteration): 	48354.694876
+
+Epoch 3 of 60 took 472.315s
+  training loss (in-iteration): 	39354.301273
+
+Epoch 4 of 60 took 472.083s
+  training loss (in-iteration): 	34675.792666
+
+Epoch 5 of 60 took 472.923s
+  training loss (in-iteration): 	30673.422142
+
+Epoch 6 of 60 took 473.377s
+  training loss (in-iteration): 	27858.690856
+
+Epoch 7 of 60 took 472.579s
+  training loss (in-iteration): 	26273.148734
+
+Epoch 8 of 60 took 472.997s
+  training loss (in-iteration): 	24347.558911
+
+Epoch 9 of 60 took 472.745s
+  training loss (in-iteration): 	23263.513110
+
+Epoch 10 of 60 took 472.307s
+  training loss (in-iteration): 	21771.586211
+
+Epoch 11 of 60 took 473.569s
+  training loss (in-iteration): 	21188.149424
+
+Epoch 12 of 60 took 474.055s
+  training loss (in-iteration): 	20061.244234
+
+Epoch 13 of 60 took 473.365s
+  training loss (in-iteration): 	19891.528887
+
+Epoch 14 of 60 took 473.530s
+  training loss (in-iteration): 	18760.537759
+
+Epoch 15 of 60 took 474.068s
+  training loss (in-iteration): 	18447.492412
+
+Epoch 16 of 60 took 473.455s
+  training loss (in-iteration): 	17928.457878
+
+Epoch 17 of 60 took 473.948s
+  training loss (in-iteration): 	17342.778843
+
+Epoch 18 of 60 took 472.283s
+  training loss (in-iteration): 	16672.537173
+
+Epoch 19 of 60 took 473.773s
+  training loss (in-iteration): 	16636.725962
+
+Epoch 20 of 60 took 473.624s
+  training loss (in-iteration): 	16161.175033
+
+Epoch 21 of 60 took 473.802s
+  training loss (in-iteration): 	15858.930393
+
+Epoch 22 of 60 took 473.520s
+  training loss (in-iteration): 	16357.698733
+
+Epoch 23 of 60 took 473.948s
+  training loss (in-iteration): 	14926.534792
+
+Epoch 24 of 60 took 474.161s
+  training loss (in-iteration): 	14978.098804
+
+Epoch 25 of 60 took 472.768s
+  training loss (in-iteration): 	14557.435615
+
+Epoch 26 of 60 took 473.180s
+  training loss (in-iteration): 	14141.456125
+
+Epoch 27 of 60 took 473.767s
+  training loss (in-iteration): 	14118.104009
+
+Epoch 28 of 60 took 473.933s
+  training loss (in-iteration): 	13953.698420
+
+Epoch 29 of 60 took 473.644s
+  training loss (in-iteration): 	13732.460497
+
+Epoch 30 of 60 took 473.032s
+  training loss (in-iteration): 	13215.506954
+
+Epoch 31 of 60 took 474.327s
+  training loss (in-iteration): 	13632.495463
+
+Epoch 32 of 60 took 474.502s
+  training loss (in-iteration): 	13027.237188
+
+Epoch 33 of 60 took 475.185s
+  training loss (in-iteration): 	12911.809124
+
+Epoch 34 of 60 took 474.683s
+  training loss (in-iteration): 	12623.464632
+
+Epoch 35 of 60 took 474.861s
+  training loss (in-iteration): 	12592.990090
+
+Epoch 36 of 60 took 475.347s
+  training loss (in-iteration): 	12583.512628
+
+Epoch 37 of 60 took 475.408s
+  training loss (in-iteration): 	12353.878135
+
+Epoch 38 of 60 took 476.804s
+  training loss (in-iteration): 	12597.043103
+
+Epoch 39 of 60 took 475.838s
+  training loss (in-iteration): 	12128.206401
+
+Epoch 40 of 60 took 475.134s
+  training loss (in-iteration): 	11705.992700
+
+Epoch 41 of 60 took 474.925s
+  training loss (in-iteration): 	11760.214967
+
+Epoch 42 of 60 took 474.729s
+  training loss (in-iteration): 	12236.611244
+
+Epoch 43 of 60 took 475.325s
+  training loss (in-iteration): 	11510.680055
+
+Epoch 44 of 60 took 475.579s
+  training loss (in-iteration): 	11227.113619
+
+Epoch 45 of 60 took 474.260s
+  training loss (in-iteration): 	11450.907102
+
+Epoch 46 of 60 took 476.189s
+  training loss (in-iteration): 	11102.265222
+
+Epoch 47 of 60 took 476.745s
+  training loss (in-iteration): 	11255.981528
+
+Epoch 48 of 60 took 476.506s
+  training loss (in-iteration): 	10997.125870
+
+Epoch 49 of 60 took 475.757s
+  training loss (in-iteration): 	11445.890256
+
+Epoch 50 of 60 took 474.794s
+  training loss (in-iteration): 	10838.491276
+
+Epoch 51 of 60 took 477.069s
+  training loss (in-iteration): 	10601.905785
+
+Epoch 52 of 60 took 475.608s
+  training loss (in-iteration): 	10659.707964
+
+Epoch 53 of 60 took 475.166s
+  training loss (in-iteration): 	10614.068507
+
+Epoch 54 of 60 took 474.834s
+  training loss (in-iteration): 	10750.131868
+
+Epoch 55 of 60 took 474.386s
+  training loss (in-iteration): 	10439.070982
+
+Epoch 56 of 60 took 475.018s
+  training loss (in-iteration): 	10401.572707
+
+Epoch 57 of 60 took 475.649s
+  training loss (in-iteration): 	10637.130581
+
+Epoch 58 of 60 took 475.343s
+  training loss (in-iteration): 	10405.722908
+
+Epoch 59 of 60 took 474.473s
+  training loss (in-iteration): 	10191.980225
+
+Epoch 60 of 60 took 474.754s
+  training loss (in-iteration): 	10123.326708
+
