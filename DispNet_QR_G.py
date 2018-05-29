@@ -2,7 +2,6 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
-#downsample
 def downsample_conv(in_planes, out_planes, kernel_size=3, stride=2):
     return nn.Sequential(
         nn.Conv2d(in_planes, out_planes, kernel_size=kernel_size, stride=stride, padding=(kernel_size-1)//2),
