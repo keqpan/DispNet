@@ -78,11 +78,21 @@ class DispNet(nn.Module):
         self.iconv2 = conv(1 + upconv_planes[3] + conv_planes[1], upconv_planes[3])
         self.iconv1 = conv(1 + upconv_planes[4] + conv_planes[0], upconv_planes[4])
 
-        self.pr6 = predict_disp(conv_planes[5])
-        self.pr5 = predict_disp(upconv_planes[0])
-        self.pr4 = predict_disp(upconv_planes[1])
-        self.pr3 = predict_disp(upconv_planes[2])
-        self.pr2 = predict_disp(upconv_planes[3])
+#       self.pr6 = predict_disp(conv_planes[5])
+        self.pr6_segment = nn.Conv2d(upconv_planes[0], 10, kernel_size=3, padding=1)
+        self.pr6_delta = predict_disp_segment(upconv_planes[0])
+#       self.pr5 = predict_disp(upconv_planes[0])
+        self.pr5_segment = nn.Conv2d(upconv_planes[0], 10, kernel_size=3, padding=1)
+        self.pr5_delta = predict_disp_segment(upconv_planes[0])
+#       self.pr4 = predict_disp(upconv_planes[1])
+        self.pr4_segment = nn.Conv2d(upconv_planes[1], 10, kernel_size=3, padding=1)
+        self.pr4_delta = predict_disp_segment(upconv_planes[1])
+#       self.pr3 = predict_disp(upconv_planes[2])
+        self.pr3_segment = nn.Conv2d(upconv_planes[2], 10, kernel_size=3, padding=1)
+        self.pr3_delta = predict_disp_segment(upconv_planes[2])
+#       self.pr2 = predict_disp(upconv_planes[3])
+        self.pr2_segment = nn.Conv2d(upconv_planes[3], 10, kernel_size=3, padding=1)
+        self.pr2_delta = predict_disp_segment(upconv_planes[3])
 #         self.pr1 = predict_disp(upconv_planes[4])
         
 #         self.pr1_0 = predict_disp(upconv_planes[4])
@@ -98,7 +108,6 @@ class DispNet(nn.Module):
 #         [self.pr1_0, self.pr1_1, self.pr1_2, self.pr1_3, self.pr1_4, self.pr1_5, self.pr1_6, self.pr1_7, self.pr1_8, self.pr1_9]  
         
         self.pr1_segment = nn.Conv2d(upconv_planes[4], 10, kernel_size=3, padding=1)
-        
         self.pr1_delta = predict_disp_segment(upconv_planes[4])
         
 #         self.upsample6 = nn.ConvTranspose2d(1, 1, 4, 2, 1, bias=False)
@@ -111,7 +120,7 @@ class DispNet(nn.Module):
     def init_weights(self):
         for m in self.modules():
             if isinstance(m, nn.Conv2d) or isinstance(m, nn.ConvTranspose2d):
-                nn.init.xavier_uniform_(m.weight.data)
+                nn.init.xavier_uniform(m.weight.data)
                 if m.bias is not None:
                     m.bias.data.zero_()
 
@@ -133,38 +142,38 @@ class DispNet(nn.Module):
         out_conv6b = self.conv6b(out_conv6a)
 #         print("out_conv6b", out_conv6b.size())
 
-        disp6_out = self.pr6(out_conv6b)
-        disp6 = F.upsample(disp6_out, list(out_conv5b.size()[-2:]), mode='bilinear', align_corners=True)
+        disp6_probs = self.pr6_segment(out_conv6b)
+        pr6_shifts = self.pr6_delta(out_conv6b)
 #         print("disp6", disp6.size())
 
         out_upconv5 = self.upconv5(out_conv6b)
 #         print("out_upconv5", out_upconv5.size())        
-        concat5 = torch.cat((crop_like(out_upconv5, out_conv5b), disp6, out_conv5b), 1)
+        concat5 = torch.cat((crop_like(out_upconv5, out_conv5b), disp6_probs, out_conv5b), 1)
         out_iconv5 = self.iconv5(concat5)
-        disp5_out = self.pr5(out_iconv5)
-        disp5 = F.upsample(disp5_out, list(out_conv4b.size()[-2:]), mode='bilinear', align_corners=True)
+        disp5_probs = self.pr5_segment(out_iconv5)
+        pr5_shifts = self.pr5_delta(out_iconv5)
 #         print("disp5", disp5.size())
         
         out_upconv4 = self.upconv4(out_iconv5)
 #         print("out_upconv4", out_upconv4.size())    
-        concat4 = torch.cat((crop_like(out_upconv4, out_conv4b), disp5, out_conv4b), 1)
+        concat4 = torch.cat((crop_like(out_upconv4, out_conv4b), disp5_probs, out_conv4b), 1)
         out_iconv4 = self.iconv4(concat4)
-        disp4_out = self.pr4(out_iconv4)
-        disp4 = F.upsample(disp4_out, list(out_conv3b.size()[-2:]), mode='bilinear', align_corners=True)
+        disp4_probs = self.pr4_segment(out_iconv4)
+        pr4_shifts = self.pr4_delta(out_iconv4)
 #         print("disp4", disp4.size())
 
         out_upconv3 = self.upconv3(out_iconv4)
-        concat3 = torch.cat((crop_like(out_upconv3, out_conv3b), disp4, out_conv3b), 1)
+        concat3 = torch.cat((crop_like(out_upconv3, out_conv3b), disp4_probs, out_conv3b), 1)
         out_iconv3 = self.iconv3(concat3)
-        disp3_out = self.pr3(out_iconv3)
-        disp3 = F.upsample(disp3_out, list(out_conv2.size()[-2:]), mode='bilinear', align_corners=True)
+        disp3_probs = self.pr3_segment(out_iconv3)
+        pr3_shifts = self.pr3_delta(out_iconv3)
 #         print("disp3", disp3.size())
         
         out_upconv2 = self.upconv2(out_iconv3)
         concat2 = torch.cat((crop_like(out_upconv2, out_conv2), disp3, out_conv2), 1)
         out_iconv2 = self.iconv2(concat2)
-        disp2_out = self.pr2(out_iconv2)
-        disp2 = F.upsample(disp2_out, list(out_conv1.size()[-2:]), mode='bilinear', align_corners=True)
+        disp2_probs = self.pr2_segment(out_iconv2)
+        disp2_shifts = self.pr2_delta(out_iconv2)
 #         print("disp2", disp2.size())
         
         out_upconv1 = self.upconv1(out_iconv2)
@@ -177,7 +186,7 @@ class DispNet(nn.Module):
 #         print("disp1", disp1.size())
 
         if self.training:
-            return disp1_probs, pr1_shifts, disp2_out, disp3_out, disp4_out, disp5_out, disp6_out
+            return disp1_probs, pr1_shifts, disp2_probs, pr2_shifts, disp3_probs, pr3_shifts, disp4_probs, pr4_shifts,disp5_probs, pr5_shifts, disp6_probs, pr6_shifts
         else:
             disp1_out = disp1_probs.argmax(dim=1, keepdim=True)
             disp1_out = pr1_shifts.gather(1, disp1_out) + 30*disp1_out.float()
